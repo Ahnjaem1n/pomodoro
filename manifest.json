@@ -1,0 +1,15 @@
+{
+  "name": "Pomodoro Timer",
+  "short_name": "Focus",
+  "icons": [
+    {
+      "src": "pomodoro.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#000000"
+}

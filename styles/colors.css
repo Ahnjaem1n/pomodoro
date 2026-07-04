@@ -1,0 +1,30 @@
+:root {
+    /* Base Colors */
+    --color-bg: #0B0A1A; /* 파란빛이 아주 살짝 감도는 어두운 배경 */
+    --color-surface: rgba(35, 33, 58, 0.6); /* 반투명한 청보라 표면 색상 (유리 효과용) */
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #9FA1C2; /* 옅은 청보라빛 회색 */
+    
+    /* Phase Accent Colors */
+    --color-focus: #6C5CE7; /* 파란빛이 감도는 세련된 보라색 (Indigo/Violet) */
+    --color-short-break: #8C7DFF; /* 밝은 청보라색 */
+    --color-long-break: #AFA4FF; /* 파스텔 라벤더 블루 */
+    
+    /* Current Accent (Dynamic) */
+    --color-accent: var(--color-focus);
+}
+
+body.phase-focus {
+    --color-accent: var(--color-focus);
+}
+body.phase-short-break {
+    --color-accent: var(--color-short-break);
+}
+body.phase-long-break {
+    --color-accent: var(--color-long-break);
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+}

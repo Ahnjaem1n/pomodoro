@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#000000">
+    <title>Pomodoro Timer</title>
+    
+    <!-- App Icons and Manifest -->
+    <link rel="icon" type="image/png" href="pomodoro.png">
+    <link rel="apple-touch-icon" href="pomodoro.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@200;300;400&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles/colors.css?v=21">
+    <link rel="stylesheet" href="styles/typography.css?v=21">
+    <link rel="stylesheet" href="styles/animation.css?v=21">
+    <link rel="stylesheet" href="styles/layout.css?v=21">
+    <link rel="stylesheet" href="styles/modal.css?v=21">
+</head>
+<body class="theme-classic phase-focus">
+    <div id="app-container">
+        <!-- 메인 타이머 영역 -->
+        <main id="timer-view">
+            <!-- 상단 헤더: 상태 텍스트 & 사이클 트래커 -->
+            <header class="timer-header">
+                <h1 id="phase-label">Focus</h1>
+                <div id="cycle-tracker" class="cycle-tracker">
+                    <div id="cycle-progress-bar" class="cycle-progress-bar"></div>
+                    <div id="cycle-count-display" class="cycle-count-display">0 Cycles</div>
+                </div>
+            </header>
+            
+            <!-- 진행률 및 시간 (Component 주입 영역) -->
+            <div id="timer-display-container"></div>
+            
+            <!-- 컨트롤 버튼 -->
+            <div class="controls">
+                <button id="btn-toggle" class="btn-primary"><span>Start</span></button>
+                <button id="btn-reset" class="btn-icon-pill">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                </button>
+                <button id="btn-skip" class="btn-icon-pill">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+                </button>
+            <button id="btn-settings" class="btn-settings-gear">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </button>
+        </main>
+        
+        <!-- 대시보드 영역 (Todo & Stats) -->
+        <div id="dashboard-container">
+            <!-- 투두리스트 패널 -->
+            <section class="dashboard-panel" id="todo-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">to-do list</h2>
+                    <div class="panel-header-actions" style="display: flex; gap: 0.8rem; align-items: center;">
+                        <div class="todo-add-container" style="display: flex; align-items: center;">
+                            <button id="btn-add-todo" class="btn-add-todo" title="Add Task">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </button>
+                            <input type="text" id="todo-input" placeholder="New task..." autocomplete="off" style="display: none;">
+                        </div>
+                        <div class="todo-tabs" data-active="pending">
+                            <div class="todo-tab-slider"></div>
+                            <button class="todo-tab active" data-tab="pending" title="Pending">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                            </button>
+                            <button class="todo-tab" data-tab="completed" title="Completed">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="todo-content">
+                    <div class="todo-progress">
+                        <svg class="progress-ring" width="88" height="88">
+                            <circle class="progress-ring-circle-bg" stroke="rgba(255,255,255,0.1)" stroke-width="4" fill="transparent" r="40" cx="44" cy="44"/>
+                            <circle class="progress-ring-circle" id="todo-progress-ring" stroke="var(--color-accent)" stroke-width="4" fill="transparent" r="40" cx="44" cy="44" stroke-dasharray="251.3" stroke-dashoffset="251.3"/>
+                        </svg>
+                        <span class="progress-text" id="todo-progress-text">0%</span>
+                    </div>
+                    <div class="todo-list-container">
+                        <div id="todo-list-items" class="todo-list-items">
+                            <!-- JS 렌더링 영역 -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 통계 패널 -->
+            <section class="dashboard-panel" id="stats-panel" style="position: relative;">
+                <div class="panel-header">
+                    <h2 class="panel-title">daily focus</h2>
+                    <div class="panel-header-actions">
+                        <button id="btn-edit-daily-goal" class="btn-add-todo" title="Set Goal">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="stats-top-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; gap: 1.5rem;">
+                    <div class="stats-time" style="margin-bottom: 0;">00:00</div>
+                    
+                    <div class="daily-progress-container" style="margin-top: 0; flex-grow: 1;">
+                        <div class="daily-progress-labels" style="margin-bottom: 0.4rem;">
+                            <span id="daily-current-time">00:00</span>
+                            <span id="daily-goal-time">Goal: 02:00</span>
+                        </div>
+                        <div class="daily-progress-bar">
+                            <div class="daily-progress-fill" id="daily-progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hourly-chart-container" id="hourly-chart-container">
+                    <div class="hourly-chart-scroll-area" id="hourly-chart-scroll-area">
+                        <!-- JS 렌더링 영역 -->
+                    </div>
+                </div>
+
+                <!-- Goal Editor Overlay -->
+                <div id="goal-editor-overlay" class="goal-editor-overlay" style="display: none;">
+                    <h3 style="font-family: var(--font-family-timer); font-weight: 300; font-size: 1.1rem; color: var(--color-text-primary);">Set Daily Goal</h3>
+                    <div class="goal-inputs">
+                        <div style="display:flex; align-items:center; gap: 0.3rem;">
+                            <input type="number" id="goal-hours-input" min="0" max="24" value="2"> <span style="color:var(--color-text-secondary); font-weight:300;">h</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap: 0.3rem;">
+                            <input type="number" id="goal-minutes-input" min="0" max="59" value="0" step="5"> <span style="color:var(--color-text-secondary); font-weight:300;">m</span>
+                        </div>
+                    </div>
+                    <div class="goal-actions">
+                        <button id="btn-cancel-goal" class="btn-text-only" style="color: rgba(255,255,255,0.6); border: none; background: transparent; cursor: pointer; padding: 0.5rem; font-family: var(--font-family-timer); transition: color 0.2s;">Cancel</button>
+                        <button id="btn-save-goal" class="btn-primary" style="padding: 0.4rem 1rem; font-size: 0.9rem; width: auto; min-width: 70px;">Save</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button id="btn-close-modal" class="btn-icon btn-close">✕</button>
+            </div>
+            
+            <h3 class="setting-section-title">Timer</h3>
+            <div class="setting-group">
+                <span class="setting-label">Focus Time (min)</span>
+                <div class="setting-control">
+                    <input type="number" id="setting-focus-time" min="1" max="90" value="25">
+                </div>
+            </div>
+            <div class="setting-group">
+                <span class="setting-label">Short Break (min)</span>
+                <div class="setting-control">
+                    <input type="number" id="setting-short-break" min="1" max="30" value="5">
+                </div>
+            </div>
+            <div class="setting-group">
+                <span class="setting-label">Long Break (min)</span>
+                <div class="setting-control">
+                    <input type="number" id="setting-long-break" min="1" max="60" value="15">
+                </div>
+            </div>
+            <div class="setting-group">
+                <span class="setting-label">Long Break Interval</span>
+                <div class="setting-control">
+                    <input type="number" id="setting-interval" min="2" max="8" value="4">
+                </div>
+            </div>
+            
+            <div class="setting-group">
+                <span class="setting-label">Auto Start</span>
+                <div class="setting-control">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="setting-autostart">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <h3 class="setting-section-title">Graphic</h3>
+            <div class="setting-group">
+                <span class="setting-label">Theme</span>
+                <div class="setting-control">
+                    <select id="setting-theme">
+                        <option value="classic">Classic</option>
+                        <option value="minimal">Minimal</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="setting-group">
+                <span class="setting-label">Text Animation</span>
+                <div class="setting-control">
+                    <select id="setting-text-anim">
+                        <option value="fade">Fade & Blur</option>
+                        <option value="slide">Slide Up</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts/storage.js?v=21"></script>
+    <script src="components/TimerCircle.js?v=21"></script>
+    <script src="components/TimerLinear.js?v=21"></script>
+    <script src="components/SettingsModal.js?v=21"></script>
+    <script src="components/TodoList.js?v=21"></script>
+    <script src="scripts/timer.js?v=21"></script>
+    <script src="scripts/app.js?v=21"></script>
+</body>
+</html>
