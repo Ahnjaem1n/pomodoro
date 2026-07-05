@@ -10,7 +10,7 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: #0B0A1A;
+    background-color: var(--color-bg);
 }
 
 #app-container {
@@ -764,7 +764,7 @@ body.theme-minimal #app-container {
     max-width: none;
     width: 100%;
     margin: 0;
-    padding: 2rem;
+    padding: calc(4.5rem + env(safe-area-inset-top)) 2rem calc(5rem + env(safe-area-inset-bottom)) 2rem;
     justify-content: flex-start;
     overflow-y: auto;
     overflow-x: hidden;
