@@ -18,11 +18,17 @@ html, body {
     flex-direction: row;
     align-items: stretch;
     height: 100%;
-    padding: calc(3rem + env(safe-area-inset-top)) 2rem 2rem 2rem;
+    /* 하단 여백을 5rem으로 늘려 그림자 끊김 방지 */
+    padding: calc(3rem + env(safe-area-inset-top)) 2rem calc(5rem + env(safe-area-inset-bottom)) 2rem;
     max-width: 1100px;
     margin: 0 auto;
     justify-content: center;
     gap: 2rem;
+}
+
+/* Minimal 테마일 때 시계/배터리 표시와 겹치지 않게 전체 디자인을 약간 아래로 내림 */
+body.theme-minimal #app-container {
+    padding-top: calc(4.5rem + env(safe-area-inset-top));
 }
 
 #timer-view {
