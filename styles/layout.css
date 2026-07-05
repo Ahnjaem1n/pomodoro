@@ -766,7 +766,7 @@ body.theme-minimal #app-container {
     max-width: none;
     width: 100%;
     margin: 0;
-    padding: calc(2rem + 10px) 2rem 2rem 2rem;
+    padding: 2.625rem 2rem 2rem 2rem;
     justify-content: flex-start;
 }
 
