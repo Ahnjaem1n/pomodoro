@@ -44,12 +44,22 @@ class TimerLinear {
                 y,
                 vx: Math.cos(angle) * speed,
                 vy: Math.sin(angle) * speed,
-                radius: 0.8 + Math.random() * 1.0, // 크기를 아주 작게
-                alpha: 1.0, // 불투명하고 선명하게 시작
-                decay: 0.02 + Math.random() * 0.03, // 서서히 사라지도록
+                size: 0.6 + Math.random() * 1.0,
+                alpha: 0.9 + Math.random() * 0.1,
+                decay: 0.02 + Math.random() * 0.03,
                 gravity: 0.05,
             });
         }
+    }
+
+    _hexToRgb(hex) {
+        if (!hex || hex.charAt(0) !== '#') return null;
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
     }
 
     setRunning(isRunning) {
@@ -85,6 +95,10 @@ class TimerLinear {
                 lastSpawnTime = timestamp;
             }
 
+            // accent 색상 가져오기
+            const accentColor = getComputedStyle(document.body).getPropertyValue('--color-accent').trim();
+            const rgb = this._hexToRgb(accentColor) || { r: 230, g: 210, b: 255 };
+
             // 파티클 업데이트 & 렌더
             this.particles = this.particles.filter(p => p.alpha > 0.02);
             for (const p of this.particles) {
@@ -94,11 +108,16 @@ class TimerLinear {
                 p.vx *= 0.96;
                 p.alpha -= p.decay;
 
-                this.ctx.beginPath();
-                this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                this.ctx.shadowBlur = 0; // 블러를 없애 선명하게
-                this.ctx.fillStyle = `rgba(230, 210, 255, ${p.alpha})`; // 밝은 연보라색으로 선명하게
-                this.ctx.fill();
+                this.ctx.save();
+                this.ctx.globalAlpha = p.alpha;
+                this.ctx.fillStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+                // 날카로운 사각형 가루로 렌더링
+                const half = p.size / 2;
+                const rotation = Math.atan2(p.vy, p.vx);
+                this.ctx.translate(p.x, p.y);
+                this.ctx.rotate(rotation);
+                this.ctx.fillRect(-half * 1.5, -half, p.size * 1.5, p.size);
+                this.ctx.restore();
             }
         };
         loop(performance.now());

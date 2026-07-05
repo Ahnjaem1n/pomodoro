@@ -12,6 +12,9 @@
     
     /* Current Accent (Dynamic) */
     --color-accent: var(--color-focus);
+
+    /* Glow Effects */
+    --glow-opacity-window: 10%;
 }
 
 body.phase-focus {
@@ -46,4 +49,5 @@ body.color-theme-spring-green {
     --color-short-break: #02F5A1;
     --color-long-break: #02F5A1;
     --color-text-secondary: #93B8B2;
+    --glow-opacity-window: 7%;
 }

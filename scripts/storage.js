@@ -8,7 +8,8 @@ const Storage = {
         autoStart: false,
         theme: 'classic', // 'classic' or 'minimal'
         colorTheme: 'default',
-        textAnimation: 'fade'
+        textAnimation: 'fade',
+        glowEffect: true
     },
     
     getSettings() {

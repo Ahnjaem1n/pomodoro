@@ -16,6 +16,9 @@ class SettingsModal {
         this.textAnimTabs = document.getElementById('setting-text-anim-tabs');
         this.textAnimTabButtons = this.textAnimTabs ? this.textAnimTabs.querySelectorAll('.todo-tab') : [];
         this.currentTextAnim = 'fade';
+        this.glowEffectTabs = document.getElementById('setting-glow-effect-tabs');
+        this.glowEffectTabButtons = this.glowEffectTabs ? this.glowEffectTabs.querySelectorAll('.todo-tab') : [];
+        this.currentGlowEffect = true;
         this.autoStartToggle = document.getElementById('setting-autostart');
         
         this.bindEvents();
@@ -63,6 +66,20 @@ class SettingsModal {
                 this.save();
             });
         }
+
+        // Glow Effect tabs events
+        if (this.glowEffectTabs) {
+            this.glowEffectTabs.style.cursor = 'pointer';
+            this.glowEffectTabs.addEventListener('click', () => {
+                this.currentGlowEffect = !this.currentGlowEffect;
+                const value = this.currentGlowEffect ? 'on' : 'off';
+                this.glowEffectTabs.setAttribute('data-active', value);
+                this.glowEffectTabButtons.forEach(b => {
+                    b.classList.toggle('active', b.getAttribute('data-value') === value);
+                });
+                this.save();
+            });
+        }
     }
     
     open() {
@@ -96,6 +113,16 @@ class SettingsModal {
             });
         }
         
+        // Glow Effect tabs load
+        this.currentGlowEffect = settings.glowEffect !== undefined ? settings.glowEffect : true;
+        if (this.glowEffectTabs) {
+            const value = this.currentGlowEffect ? 'on' : 'off';
+            this.glowEffectTabs.setAttribute('data-active', value);
+            this.glowEffectTabButtons.forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-value') === value);
+            });
+        }
+        
         this.autoStartToggle.checked = settings.autoStart;
         
         this.overlay.classList.add('active');
@@ -124,6 +151,7 @@ class SettingsModal {
             theme: this.currentTheme,
             colorTheme: this.colorThemeSelect.value,
             textAnimation: this.currentTextAnim,
+            glowEffect: this.currentGlowEffect,
             autoStart: this.autoStartToggle.checked
         };
         

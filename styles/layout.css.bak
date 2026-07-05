@@ -18,7 +18,7 @@ html, body {
     align-items: stretch;
     height: 100%;
     padding: 3rem 2rem;
-    max-width: 1100px;
+    max-width: 1000px;
     margin: 0 auto;
     justify-content: center;
     gap: 2rem;
@@ -36,7 +36,7 @@ html, body {
     background: rgba(30, 30, 34, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 32px;
-    box-shadow: 0 16px 64px color-mix(in srgb, var(--color-accent) var(--glow-opacity-window), transparent);
+    box-shadow: 0 16px 64px color-mix(in srgb, var(--color-accent) 10%, transparent);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     width: 100%;
@@ -209,7 +209,6 @@ button {
     width: 100%;
     margin-top: 0;
     flex: 1;
-    min-height: 0;
 }
 
 .dashboard-panel {
@@ -221,10 +220,9 @@ button {
     -webkit-backdrop-filter: blur(20px);
     display: flex;
     flex-direction: column;
-    box-shadow: 0 16px 64px color-mix(in srgb, var(--color-accent) var(--glow-opacity-window), transparent); /* Glow effect */
-    min-height: 0;
+    box-shadow: 0 16px 64px color-mix(in srgb, var(--color-accent) 10%, transparent); /* Glow effect */
+    min-height: 252px;
     flex: 1;
-    overflow: hidden;
 }
 
 .panel-header {
@@ -253,6 +251,7 @@ button {
     border-radius: 99px;
     padding: 3px;
     position: relative;
+    z-index: 1;
 }
 
 .todo-tab-slider {
@@ -265,13 +264,10 @@ button {
     border-radius: 99px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bouncy effect */
-    pointer-events: none;
+    z-index: -1;
 }
 
-.todo-tabs[data-active="completed"] .todo-tab-slider,
-.todo-tabs[data-active="minimal"] .todo-tab-slider,
-.todo-tabs[data-active="slide"] .todo-tab-slider,
-.todo-tabs[data-active="off"] .todo-tab-slider {
+.todo-tabs[data-active="completed"] .todo-tab-slider {
     transform: translateX(100%);
 }
 
@@ -286,8 +282,6 @@ button {
     align-items: center;
     transition: color 0.3s;
     flex: 1;
-    cursor: pointer;
-    position: relative;
 }
 
 .todo-tab.active {
@@ -302,7 +296,6 @@ button {
     align-items: flex-start;
     gap: 2rem;
     flex-grow: 1;
-    min-height: 0;
 }
 
 .todo-progress {
@@ -318,11 +311,6 @@ button {
     transform: rotate(-90deg);
 }
 
-#todo-progress-ring {
-    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--color-accent) 60%, transparent));
-    transition: stroke-dashoffset 0.5s ease-in-out, stroke 0.3s ease, filter 0.3s ease;
-}
-
 .progress-text {
     position: absolute;
     font-family: var(--font-family-timer);
@@ -336,8 +324,6 @@ button {
     flex-direction: column;
     gap: 1rem;
     flex-grow: 1;
-    min-height: 0;
-    align-self: stretch;
 }
 
 .todo-list-items {
@@ -345,9 +331,9 @@ button {
     flex-direction: column;
     justify-content: flex-start;
     gap: 1rem;
+    max-height: 162px;
     overflow-y: auto;
     flex-grow: 1;
-    min-height: 0;
 }
 
 /* Custom Scrollbar for Todo List */
@@ -582,9 +568,8 @@ button {
 /* Hourly Chart */
 .hourly-chart-container {
     width: 100%;
-    flex-grow: 1;
-    min-height: 110px;
-    margin-top: 2rem;
+    height: 110px;
+    margin-top: auto;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-behavior: smooth;
@@ -611,17 +596,6 @@ button {
     content: '';
     position: absolute;
     bottom: 24px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: rgba(255, 255, 255, 0.15);
-    z-index: 0;
-}
-
-.hourly-chart-scroll-area::after {
-    content: '';
-    position: absolute;
-    top: 0;
     left: 0;
     width: 100%;
     height: 1px;
@@ -755,8 +729,6 @@ body.theme-minimal #app-container {
     margin: 0;
     padding: 2rem;
     justify-content: flex-start;
-    overflow-y: auto;
-    overflow-x: hidden;
 }
 
 body.theme-minimal #timer-view {
@@ -772,31 +744,7 @@ body.theme-minimal #dashboard-container {
     flex: none;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 350px;
     width: 100%;
-}
-
-body.theme-minimal .dashboard-panel {
-    height: 350px;
-    min-height: 350px;
-    max-height: 350px;
-    overflow: hidden;
-}
-
-body.theme-minimal .todo-content {
-    overflow: hidden;
-    flex: 1;
-    min-height: 0;
-}
-
-body.theme-minimal .todo-list-container {
-    overflow: hidden;
-    flex: 1;
-    min-height: 0;
-}
-
-body.theme-minimal .todo-list-items {
-    max-height: 100%;
 }
 
 @media (max-width: 800px) {
@@ -824,25 +772,4 @@ body.theme-minimal .controls,
 body.theme-minimal #time-display-minimal {
     padding-left: 0;
     padding-right: 0;
-}
-
-/* ---------------------------------
-   Glow Effect Toggle Override
----------------------------------- */
-body.glow-off #phase-label,
-body.glow-off .panel-title {
-    text-shadow: none !important;
-}
-
-body.glow-off .btn-primary,
-body.glow-off .daily-progress-fill,
-body.glow-off .hourly-bar-fill,
-body.glow-off #progress-bar {
-    box-shadow: none !important;
-}
-
-body.glow-off #progress-ring,
-body.glow-off #todo-progress-ring,
-body.glow-off .cycle-step.step-current {
-    filter: none !important;
 }
