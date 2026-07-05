@@ -13,10 +13,21 @@ class TimerCircle {
         this.container.innerHTML = `
             <div class="timer-circle-wrapper" style="position: relative; width: 400px; height: 400px;">
                 <svg width="400" height="400" viewBox="0 0 400 400" style="transform: rotate(-90deg); overflow: visible;">
+                    <defs>
+                        <filter id="circle-glow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+                            <feFlood id="circle-glow-color" flood-color="var(--color-accent)" flood-opacity="0.8" result="color" />
+                            <feComposite in="color" in2="blur" operator="in" result="coloredBlur" />
+                            <feMerge>
+                                <feMergeNode in="coloredBlur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
                     <circle cx="200" cy="200" r="174" fill="none" stroke="var(--color-surface)" stroke-width="14" />
                     <circle id="progress-ring" cx="200" cy="200" r="174" fill="none" stroke="var(--color-accent)" stroke-width="14" 
                             stroke-linecap="round" stroke-dasharray="1093.27" stroke-dashoffset="0"
-                            style="transition: stroke 0.4s ease; filter: drop-shadow(0 0 24px var(--color-accent)); -webkit-filter: drop-shadow(0 0 24px var(--color-accent)); transform: translateZ(0);" />
+                            style="transition: stroke 0.4s ease;" filter="url(#circle-glow)" />
                 </svg>
                 <canvas id="circle-particle-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;"></canvas>
                 <div id="time-display" class="text-timer-classic" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--color-text-primary); display: flex;">
@@ -29,7 +40,28 @@ class TimerCircle {
         this.ctx = this.canvas.getContext('2d');
         this.circumference = 2 * Math.PI * 174; // ~1093.27
         this.wrapper = this.container.querySelector('.timer-circle-wrapper');
+        this.glowFlood = document.getElementById('circle-glow-color');
         this._resizeCanvas();
+        this._syncGlowColor();
+    }
+
+    _syncGlowColor() {
+        if (!this.glowFlood) return;
+
+        // glow-off 토글 처리: SVG 속성 filter는 CSS로 제어 불가하므로 JS로 처리
+        const glowOff = document.body.classList.contains('glow-off');
+        if (glowOff) {
+            this.progressRing.removeAttribute('filter');
+            return;
+        } else if (!this.progressRing.getAttribute('filter')) {
+            this.progressRing.setAttribute('filter', 'url(#circle-glow)');
+        }
+
+        const accent = getComputedStyle(document.body).getPropertyValue('--color-accent').trim();
+        if (accent && accent !== this._lastGlowColor) {
+            this.glowFlood.setAttribute('flood-color', accent);
+            this._lastGlowColor = accent;
+        }
     }
 
     _resizeCanvas() {
@@ -101,6 +133,9 @@ class TimerCircle {
             }
 
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            // SVG 필터 글로우 색상을 현재 accent 색상과 동기화
+            this._syncGlowColor();
 
             // 타이머 실행 중이고 progress가 있을 때만 파티클 생성
             if (this.isRunning && this.currentProgress > 0.001 && timestamp - lastSpawnTime > 100) {
