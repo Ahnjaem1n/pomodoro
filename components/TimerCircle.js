@@ -16,7 +16,7 @@ class TimerCircle {
                     <circle cx="200" cy="200" r="174" fill="none" stroke="var(--color-surface)" stroke-width="14" />
                     <circle id="progress-ring" cx="200" cy="200" r="174" fill="none" stroke="var(--color-accent)" stroke-width="14" 
                             stroke-linecap="round" stroke-dasharray="1093.27" stroke-dashoffset="0"
-                            style="transition: stroke 0.4s ease; filter: drop-shadow(0 0 24px var(--color-accent));" />
+                            style="transition: stroke 0.4s ease; filter: drop-shadow(0 0 24px var(--color-accent)); -webkit-filter: drop-shadow(0 0 24px var(--color-accent)); transform: translateZ(0);" />
                 </svg>
                 <canvas id="circle-particle-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10;"></canvas>
                 <div id="time-display" class="text-timer-classic" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--color-text-primary); display: flex;">
