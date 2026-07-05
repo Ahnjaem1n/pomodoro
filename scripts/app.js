@@ -82,25 +82,28 @@ document.addEventListener('DOMContentLoaded', () => {
         cycleCountDisplay.textContent = `${stats.cycles} Cycles`;
     };
 
-    // 버튼 텍스트를 자연스러운 애니메이션과 함께 교체하는 헬퍼 함수
-    const setToggleText = (newText) => {
-        const span = toggleBtn.querySelector('span');
-        if (!span) {
-            toggleBtn.innerHTML = `<span>${newText}</span>`;
-            return;
-        }
-        // 이미 같은 텍스트면 스킵
-        if (span.textContent === newText) return;
+    const TOGGLE_ICONS = {
+        play: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(2, 0)"><polygon points="5 3 19 12 5 21 5 3"></polygon></g></svg>`,
+        pause: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`
+    };
+
+    // 아이콘을 자연스러운 애니메이션과 함께 교체하는 헬퍼 함수
+    const setToggleIcon = (type) => {
+        const inner = toggleBtn.querySelector('.icon-inner');
+        if (!inner) return;
+        const newIcon = TOGGLE_ICONS[type];
+        
+        if (inner.innerHTML === newIcon) return;
 
         // 1) fade out
-        span.classList.remove('btn-text-in');
-        span.classList.add('btn-text-out');
+        inner.classList.remove('btn-text-in');
+        inner.classList.add('btn-text-out');
 
-        // 2) 100ms 후 텍스트 교체 + fade in
+        // 2) 100ms 후 교체 + fade in
         setTimeout(() => {
-            span.textContent = newText;
-            span.classList.remove('btn-text-out');
-            span.classList.add('btn-text-in');
+            inner.innerHTML = newIcon;
+            inner.classList.remove('btn-text-out');
+            inner.classList.add('btn-text-in');
         }, 100);
     };
     
@@ -118,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             timerUI = new TimerCircle(container);
         }
-        document.body.className = `theme-${settings.theme} phase-${currentPhase}`;
+        document.body.className = `theme-${settings.theme} color-theme-${settings.colorTheme || 'default'} phase-${currentPhase}`;
     };
 
     // Initial UI setup
@@ -126,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const setPhase = (phase) => {
         currentPhase = phase;
-        document.body.className = `theme-${settings.theme} phase-${phase}`;
+        document.body.className = `theme-${settings.theme} color-theme-${settings.colorTheme || 'default'} phase-${phase}`;
         
         let newLabel = '';
         if (phase === 'focus') newLabel = 'Focus';
@@ -143,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         updateCycleDisplay();
         timer.reset(getPhaseTime());
-        setToggleText('Start');
+        setToggleIcon('play');
         if (timerUI && timerUI.setRunning) timerUI.setRunning(false);
         updateDailyFocus();
     };
@@ -343,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (settings.autoStart) {
             timer.start();
-            setToggleText('Pause');
+            setToggleIcon('pause');
             if (timerUI && timerUI.setRunning) timerUI.setRunning(true);
         }
     };
@@ -362,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Settings Modal Setup
     const settingsModal = new SettingsModal((newSettings) => {
-        const themeChanged = settings.theme !== newSettings.theme;
+        const themeChanged = settings.theme !== newSettings.theme || settings.colorTheme !== newSettings.colorTheme;
         const timeChanged = 
             settings.focusTime !== newSettings.focusTime ||
             settings.shortBreakTime !== newSettings.shortBreakTime ||
@@ -383,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (timeChanged) {
             timer.reset(getPhaseTime());
-            setToggleText('Start');
+            setToggleIcon('play');
             if (timerUI && timerUI.setRunning) timerUI.setRunning(false);
         }
         
@@ -398,11 +401,11 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleBtn.addEventListener('click', () => {
         if (timer.isRunning) {
             timer.pause();
-            setToggleText('Resume');
+            setToggleIcon('play');
             if (timerUI && timerUI.setRunning) timerUI.setRunning(false);
         } else {
             timer.start();
-            setToggleText('Pause');
+            setToggleIcon('pause');
             if (timerUI && timerUI.setRunning) timerUI.setRunning(true);
         }
     });
@@ -410,7 +413,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resetBtn.addEventListener('click', () => {
         commitFocusTime();
         timer.reset(getPhaseTime());
-        setToggleText('Start');
+        setToggleIcon('play');
         if (timerUI && timerUI.setRunning) timerUI.setRunning(false);
         updateDailyFocus();
     });

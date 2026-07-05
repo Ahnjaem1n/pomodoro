@@ -27,4 +27,23 @@ body.phase-long-break {
 body {
     background-color: var(--color-bg);
     color: var(--color-text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.color-theme-coral-red {
+    --color-bg: #171616;
+    --color-surface: rgba(40, 30, 30, 0.6);
+    --color-focus: #F95C4B;
+    --color-short-break: #F95C4B;
+    --color-long-break: #F95C4B;
+    --color-text-secondary: #BCA4A2;
+}
+
+body.color-theme-spring-green {
+    --color-bg: #07191E;
+    --color-surface: rgba(20, 50, 50, 0.6);
+    --color-focus: #02F5A1;
+    --color-short-break: #02F5A1;
+    --color-long-break: #02F5A1;
+    --color-text-secondary: #93B8B2;
 }

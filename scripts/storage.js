@@ -7,6 +7,7 @@ const Storage = {
         dailyGoal: 120, // In minutes
         autoStart: false,
         theme: 'classic', // 'classic' or 'minimal'
+        colorTheme: 'default',
         textAnimation: 'fade'
     },
     

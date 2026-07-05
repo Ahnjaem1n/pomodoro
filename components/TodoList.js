@@ -6,7 +6,7 @@ class TodoList {
         this.listContainer = document.getElementById('todo-list-items');
         this.inputElement = document.getElementById('todo-input');
         this.btnAddTodo = document.getElementById('btn-add-todo');
-        this.tabs = document.querySelectorAll('.todo-tab');
+        this.tabs = document.querySelectorAll('#todo-panel .todo-tab');
         this.progressRing = document.getElementById('todo-progress-ring');
         this.progressText = document.getElementById('todo-progress-text');
         
@@ -17,7 +17,7 @@ class TodoList {
     }
     
     bindEvents() {
-        const tabsContainer = document.querySelector('.todo-tabs');
+        const tabsContainer = document.querySelector('#todo-panel .todo-tabs');
         
         // Tab switching (entire container acts as a toggle)
         if (tabsContainer) {

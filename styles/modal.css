@@ -25,7 +25,7 @@
 
 /* Modal Content */
 .modal-content {
-    background-color: rgba(20, 15, 30, 0.7); /* 반투명한 어두운 보라 배경 */
+    background-color: color-mix(in srgb, var(--color-bg) 80%, black 20%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -136,7 +136,7 @@ input[type="number"] {
 
 input[type="number"]:focus {
     outline: none;
-    border-color: var(--color-focus);
+    border-color: var(--color-accent);
 }
 
 /* Select Styles */
@@ -154,7 +154,7 @@ select {
 
 select:focus {
     outline: none;
-    border-color: var(--color-focus);
+    border-color: var(--color-accent);
 }
 
 /* Toggle Switch */
@@ -196,7 +196,7 @@ select:focus {
 }
 
 input:checked + .slider {
-    background-color: var(--color-focus); /* 보라색으로 토글 활성화 색상 변경 */
+    background-color: var(--color-accent); /* 테마 색상으로 토글 활성화 색상 변경 */
 }
 
 input:checked + .slider:before {

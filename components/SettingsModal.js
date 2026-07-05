@@ -9,8 +9,13 @@ class SettingsModal {
         this.shortBreakTimeInput = document.getElementById('setting-short-break');
         this.longBreakTimeInput = document.getElementById('setting-long-break');
         this.intervalInput = document.getElementById('setting-interval');
-        this.themeSelect = document.getElementById('setting-theme');
-        this.textAnimSelect = document.getElementById('setting-text-anim');
+        this.themeTabs = document.getElementById('setting-theme-tabs');
+        this.themeTabButtons = this.themeTabs ? this.themeTabs.querySelectorAll('.todo-tab') : [];
+        this.currentTheme = 'classic';
+        this.colorThemeSelect = document.getElementById('setting-color-theme');
+        this.textAnimTabs = document.getElementById('setting-text-anim-tabs');
+        this.textAnimTabButtons = this.textAnimTabs ? this.textAnimTabs.querySelectorAll('.todo-tab') : [];
+        this.currentTextAnim = 'fade';
         this.autoStartToggle = document.getElementById('setting-autostart');
         
         this.bindEvents();
@@ -26,12 +31,38 @@ class SettingsModal {
         const inputs = [
             this.focusTimeInput, this.shortBreakTimeInput, 
             this.longBreakTimeInput, this.intervalInput, 
-            this.themeSelect, this.textAnimSelect, this.autoStartToggle
+            this.colorThemeSelect, this.autoStartToggle
         ];
         
         inputs.forEach(input => {
-            input.addEventListener('change', () => this.save());
+            if (input) input.addEventListener('change', () => this.save());
         });
+
+        // Theme tabs events - 컨테이너 어디를 클릭해도 토글
+        if (this.themeTabs) {
+            this.themeTabs.style.cursor = 'pointer';
+            this.themeTabs.addEventListener('click', () => {
+                this.currentTheme = this.currentTheme === 'classic' ? 'minimal' : 'classic';
+                this.themeTabs.setAttribute('data-active', this.currentTheme);
+                this.themeTabButtons.forEach(b => {
+                    b.classList.toggle('active', b.getAttribute('data-value') === this.currentTheme);
+                });
+                this.save();
+            });
+        }
+
+        // Text Anim tabs events
+        if (this.textAnimTabs) {
+            this.textAnimTabs.style.cursor = 'pointer';
+            this.textAnimTabs.addEventListener('click', () => {
+                this.currentTextAnim = this.currentTextAnim === 'fade' ? 'slide' : 'fade';
+                this.textAnimTabs.setAttribute('data-active', this.currentTextAnim);
+                this.textAnimTabButtons.forEach(b => {
+                    b.classList.toggle('active', b.getAttribute('data-value') === this.currentTextAnim);
+                });
+                this.save();
+            });
+        }
     }
     
     open() {
@@ -44,8 +75,27 @@ class SettingsModal {
         this.longBreakTimeInput.value = settings.longBreakTime / 60;
         
         this.intervalInput.value = settings.longBreakInterval;
-        this.themeSelect.value = settings.theme;
-        this.textAnimSelect.value = settings.textAnimation || 'fade';
+        
+        // Theme tabs load
+        this.currentTheme = settings.theme || 'classic';
+        if (this.themeTabs) {
+            this.themeTabs.setAttribute('data-active', this.currentTheme);
+            this.themeTabButtons.forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-value') === this.currentTheme);
+            });
+        }
+        
+        this.colorThemeSelect.value = settings.colorTheme || 'default';
+        
+        // Text Anim tabs load
+        this.currentTextAnim = settings.textAnimation || 'fade';
+        if (this.textAnimTabs) {
+            this.textAnimTabs.setAttribute('data-active', this.currentTextAnim);
+            this.textAnimTabButtons.forEach(b => {
+                b.classList.toggle('active', b.getAttribute('data-value') === this.currentTextAnim);
+            });
+        }
+        
         this.autoStartToggle.checked = settings.autoStart;
         
         this.overlay.classList.add('active');
@@ -57,9 +107,9 @@ class SettingsModal {
     
     save() {
         let parsedInterval = parseInt(this.intervalInput.value, 10);
-        if (parsedInterval >= 9) {
-            parsedInterval = 8;
-            this.intervalInput.value = 8;
+        if (parsedInterval >= 7) {
+            parsedInterval = 6;
+            this.intervalInput.value = 6;
         }
         if (parsedInterval < 2) {
             parsedInterval = 2;
@@ -71,8 +121,9 @@ class SettingsModal {
             shortBreakTime: parseInt(this.shortBreakTimeInput.value, 10) * 60,
             longBreakTime: parseInt(this.longBreakTimeInput.value, 10) * 60,
             longBreakInterval: parsedInterval,
-            theme: this.themeSelect.value,
-            textAnimation: this.textAnimSelect.value,
+            theme: this.currentTheme,
+            colorTheme: this.colorThemeSelect.value,
+            textAnimation: this.currentTextAnim,
             autoStart: this.autoStartToggle.checked
         };
         

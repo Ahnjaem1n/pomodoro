@@ -41,7 +41,11 @@
             
             <!-- 컨트롤 버튼 -->
             <div class="controls">
-                <button id="btn-toggle" class="btn-primary"><span>Start</span></button>
+                <button id="btn-toggle" class="btn-icon-pill">
+                    <span class="icon-inner" style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(2, 0)"><polygon points="5 3 19 12 5 21 5 3"></polygon></g></svg>
+                    </span>
+                </button>
                 <button id="btn-reset" class="btn-icon-pill">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
                 </button>
@@ -61,7 +65,7 @@
             <!-- 투두리스트 패널 -->
             <section class="dashboard-panel" id="todo-panel">
                 <div class="panel-header">
-                    <h2 class="panel-title">to-do list</h2>
+                    <h2 class="panel-title">To-do List</h2>
                     <div class="panel-header-actions" style="display: flex; gap: 0.8rem; align-items: center;">
                         <div class="todo-add-container" style="display: flex; align-items: center;">
                             <button id="btn-add-todo" class="btn-add-todo" title="Add Task">
@@ -99,7 +103,7 @@
             <!-- 통계 패널 -->
             <section class="dashboard-panel" id="stats-panel" style="position: relative;">
                 <div class="panel-header">
-                    <h2 class="panel-title">daily focus</h2>
+                    <h2 class="panel-title">Daily Focus</h2>
                     <div class="panel-header-actions">
                         <button id="btn-edit-daily-goal" class="btn-add-todo" title="Set Goal">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
@@ -176,7 +180,7 @@
             <div class="setting-group">
                 <span class="setting-label">Long Break Interval</span>
                 <div class="setting-control">
-                    <input type="number" id="setting-interval" min="2" max="8" value="4">
+                    <input type="number" id="setting-interval" min="2" max="6" value="4">
                 </div>
             </div>
             
@@ -192,22 +196,35 @@
 
             <h3 class="setting-section-title">Graphic</h3>
             <div class="setting-group">
-                <span class="setting-label">Theme</span>
+                <span class="setting-label">Color Theme</span>
                 <div class="setting-control">
-                    <select id="setting-theme">
-                        <option value="classic">Classic</option>
-                        <option value="minimal">Minimal</option>
+                    <select id="setting-color-theme">
+                        <option value="default">Default</option>
+                        <option value="coral-red">Coral Red</option>
+                        <option value="spring-green">Spring Green</option>
                     </select>
+                </div>
+            </div>
+            
+            <div class="setting-group">
+                <span class="setting-label">Graphic Theme</span>
+                <div class="setting-control">
+                    <div class="todo-tabs" id="setting-theme-tabs" data-active="classic" style="width: 150px; height: 32px;">
+                        <div class="todo-tab-slider"></div>
+                        <button type="button" class="todo-tab active" data-value="classic" style="font-family: var(--font-family-timer); font-size: 0.85rem;">Classic</button>
+                        <button type="button" class="todo-tab" data-value="minimal" style="font-family: var(--font-family-timer); font-size: 0.85rem;">Minimal</button>
+                    </div>
                 </div>
             </div>
             
             <div class="setting-group">
                 <span class="setting-label">Text Animation</span>
                 <div class="setting-control">
-                    <select id="setting-text-anim">
-                        <option value="fade">Fade & Blur</option>
-                        <option value="slide">Slide Up</option>
-                    </select>
+                    <div class="todo-tabs" id="setting-text-anim-tabs" data-active="fade" style="width: 140px; height: 32px;">
+                        <div class="todo-tab-slider"></div>
+                        <button type="button" class="todo-tab active" data-value="fade" style="font-family: var(--font-family-timer); font-size: 0.85rem;">Fade</button>
+                        <button type="button" class="todo-tab" data-value="slide" style="font-family: var(--font-family-timer); font-size: 0.85rem;">Slide</button>
+                    </div>
                 </div>
             </div>
         </div>
