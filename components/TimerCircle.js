@@ -15,8 +15,8 @@ class TimerCircle {
                 <svg width="400" height="400" viewBox="0 0 400 400" style="transform: rotate(-90deg); overflow: visible;">
                     <defs>
                         <filter id="circle-glow" x="-50%" y="-50%" width="200%" height="200%">
-                            <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
-                            <feFlood id="circle-glow-color" flood-color="var(--color-accent)" flood-opacity="0.8" result="color" />
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="11.2" result="blur" />
+                            <feFlood id="circle-glow-color" flood-color="var(--color-accent)" flood-opacity="0.56" result="color" />
                             <feComposite in="color" in2="blur" operator="in" result="coloredBlur" />
                             <feMerge>
                                 <feMergeNode in="coloredBlur" />
